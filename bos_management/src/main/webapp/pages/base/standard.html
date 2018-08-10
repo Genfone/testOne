@@ -30,9 +30,21 @@
 					pageList: [30,50,100],
 					pagination : true,
 					toolbar : toolbar,
-					url : "../../data/standard.json",
+					url : "../../standard_pageQuery.action",
 					idField : 'id',
 					columns : columns
+				});
+				
+				// 对收派件的按钮添加点击事件
+				$("#save").click(function(){
+					// 对表单进行校验
+					if($("#standardForm").form("validate")){
+						// 通过校验
+						$("#standardForm").submit();
+					}else{
+						// 未通过，显示提示信息
+						$.messager.alert("警告","表单中还有未填写数据","warning");
+					}
 				});
 			});	
 			
@@ -42,19 +54,33 @@
 				text : '增加',
 				iconCls : 'icon-add',
 				handler : function(){
-					alert('增加');
+					$("#standardWindow").window('open');
 				}
 			}, {
 				id : 'button-edit',
 				text : '修改',
 				iconCls : 'icon-edit',
 				handler : function(){
-					alert('修改');
+					// 获取当前datagrid获取的数据
+					var rows = $("#grid").datagrid('getSelections');
+					// 判断选中的要修改的数据是否为一行
+					if(rows.length != 1){
+						// 提示没选或者多选了
+						$.messager.alert("提示信息","没有选择或者选择过多","warning");
+					}else{
+						// 显示窗口
+						$("#standardWindow").window('open');
+						// 只选择了一行，获取这一行的数据
+						var row = rows[0];
+						// 进行表单的回显操作
+						$("#standardForm").form('load',row);
+						
+					}
 				}
 			}];
 			
 			// 定义列
-			var columns = [ [ {
+			var columns = [ [ {		// 二位数组，支持多级表头，每一个数组就是一行表头
 				field : 'id',
 				checkbox : true
 			},{
@@ -103,6 +129,7 @@
 
 	<body class="easyui-layout" style="visibility:hidden;">
 		<div region="center" border="false">
+			<!--修改框数据回显的表-->
 			<table id="grid"></table>
 		</div>
 		
@@ -115,7 +142,7 @@
 
 			<div region="center" style="overflow:auto;padding:5px;" border="false">
 				
-				<form>
+				<form id="standardForm" action="../../standard_save.action" method="post">
 					<table class="table-edit" width="80%" align="center">
 						<tr class="title">
 							<td colspan="2">收派标准信息
@@ -133,8 +160,7 @@
 						<tr>
 							<td>最小重量</td>
 							<td>
-								<input type="text" name="minWeight" 
-										class="easyui-numberbox" required="true" />
+								<input type="text" name="minWeight"	class="easyui-numberbox" data-options="required:true"  />
 							</td>
 						</tr>
 						<tr>
@@ -156,6 +182,7 @@
 							</td>
 						</tr>
 					</table>
+					
 				</form>
 			</div>
 		</div>
