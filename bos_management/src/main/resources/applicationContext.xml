@@ -36,7 +36,7 @@
 		<property name="dataSource" ref="dataSource" />
 		<property name="packagesToScan" value="cn.itcast.bos.domain" />
 		<property name="persistenceProvider">
-			<bean class="org.hibernate.ejb.HibernatePersistence" />
+			<bean class="org.hibernate.jpa.HibernatePersistenceProvider" />
 		</property>
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
